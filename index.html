@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carpool Matcher</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { margin: 5px 0; padding: 8px; width: 100%; max-width: 300px; }
+  </style>
+</head>
+<body>
+  <h2>Select Destination</h2>
+  <input type="text" id="area" placeholder="Enter area (e.g., Johar, Gulshan)" list="suggestions">
+  <datalist id="suggestions">
+    <option value="Johar">
+    <option value="Gulshan">
+    <option value="Saddar">
+    <option value="Clifton">
+  </datalist>
+
+  <h3>Select Gender</h3>
+  <label><input type="radio" name="gender" value="male"> Male</label>
+  <label><input type="radio" name="gender" value="female"> Female</label>
+
+  <br><br>
+  <button onclick="proceed()">Find Match</button>
+
+  <script>
+    function proceed() {
+      const area = document.getElementById('area').value;
+      const gender = document.querySelector('input[name="gender"]:checked');
+      if (!area || !gender) return alert("Please fill all fields");
+
+      sessionStorage.setItem("area", area);
+      sessionStorage.setItem("gender", gender.value);
+      window.location.href = "match.html";
+    }
+  </script>
+</body>
+</html>

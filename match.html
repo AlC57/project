@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Matching...</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h2>Finding Match...</h2>
+  <div id="waiting">Waiting for more students...</div>
+  <div id="selection" style="display:none;">
+    <h3>Select a meetup point</h3>
+    <button onclick="select('Library Gate')">Library Gate</button>
+    <button onclick="select('Main Canteen')">Main Canteen</button>
+    <button onclick="select('Parking Lot')">Parking Lot</button>
+  </div>
+  <div id="final" style="display:none;"></div>
+
+  <script>
+    const socket = io();
+    const area = sessionStorage.getItem("area");
+    const gender = sessionStorage.getItem("gender");
+    let groupId = null;
+
+    socket.emit("join", { area, gender });
+
+    socket.on("waiting_count", (count) => {
+      document.getElementById("waiting").textContent = `Waiting users: ${count}`;
+    });
+
+    socket.on("group_formed", (data) => {
+      groupId = data.groupId;
+      document.getElementById("waiting").style.display = "none";
+      document.getElementById("selection").style.display = "block";
+    });
+
+    function select(location) {
+      socket.emit("select_meetup", { groupId, location });
+    }
+
+    socket.on("meetup_selected", (location) => {
+      document.getElementById("selection").style.display = "none";
+      document.getElementById("final").style.display = "block";
+      document.getElementById("final").textContent = `Meetup Point: ${location}`;
+    });
+  </script>
+</body>
+</html>
